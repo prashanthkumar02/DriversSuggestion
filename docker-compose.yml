@@ -52,6 +52,8 @@ services:
       MYSQL_PASSWORD: 'user123'
       # Password for root access
       MYSQL_ROOT_PASSWORD: 'user123'
+      # Edge case: this will create a root user with permission to login from any given IP address
+      MYSQL_ROOT_HOST: '%'
     ports:
       # <Port exposed> : < MySQL Port running inside container>
       - '3306:3306'
