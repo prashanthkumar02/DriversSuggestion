@@ -52,8 +52,6 @@ services:
       MYSQL_PASSWORD: 'user123'
       # Password for root access
       MYSQL_ROOT_PASSWORD: 'user123'
-      # Edge case: this will create a root user with permission to login from any given IP address
-      MYSQL_ROOT_HOST: '%'
     ports:
       # <Port exposed> : < MySQL Port running inside container>
       - '3306:3306'
@@ -63,12 +61,26 @@ services:
       # Where our data will be persisted
     volumes:
       - my-db:/var/lib/mysql
+      - ./docker_files:/docker-entrypoint-initdb.d
     depends_on:
       - "kafka"
     links:
       - kafka
 
+  springboot-docker-container:
+    image: springboot-docker-container
+    ports:
+      - "9080:9080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/db
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "user123"
+    build:
+      context: "./docker_files"
+      dockerfile: "Springboot_Docker_Startup"
+    depends_on:
+      - db
+
 # Names our volume
 volumes:
   my-db:
-    
