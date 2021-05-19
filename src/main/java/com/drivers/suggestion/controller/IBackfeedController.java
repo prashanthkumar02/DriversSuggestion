@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,7 @@ public interface IBackfeedController {
             response = NearestDrivers.class,
             responseContainer = "List")
     @GetMapping("/fetchNearestDrivers")
-    List<NearestDrivers> getNearestDrivers(
+    ResponseEntity<List<NearestDrivers>> getNearestDrivers(
             @ApiParam(
                     value = "Store number to fetch the nearest drivers",
                     type = "String",
@@ -37,23 +38,22 @@ public interface IBackfeedController {
 
 
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success!")
+            @ApiResponse(code = 200, message = "Gives success message upon inserting the records in database")
     })
-    @ApiOperation(value = "Retrieves stores data")
-    @GetMapping("/getStoreConfig")
-    void getStoreDetails(
+    @ApiOperation(value = "Retrieves stores data", response = String.class)
+    @PostMapping("/StoresData")
+    ResponseEntity<String> postLoadOfStoreDetails(
             @ApiParam(
                     value = "List of store details",
                     type = "List<Store>",
-                    required = true) List<Store> storesConfig);
+                    required = true) @RequestBody List<Store> storesConfig);
 
 
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Drivers data inserted into database") })
-    @ApiOperation(value = "Back feeding the drivers data into the database",
-            response = Driver.class,
-            responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Gives success message upon inserting drivers data into database") })
+    @ApiOperation(value = "Back feeding the drivers data into the database", response = String.class)
     @PostMapping("/driversData")
-    void postDriversData(
+    ResponseEntity<String> postDriversData(
             @ApiParam(
                     value = "List of drivers details",
                     type = "List<Driver>",
