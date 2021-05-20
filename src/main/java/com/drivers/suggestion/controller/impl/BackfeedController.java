@@ -1,6 +1,7 @@
 package com.drivers.suggestion.controller.impl;
 
 import com.drivers.suggestion.controller.IBackfeedController;
+import com.drivers.suggestion.kafka.producer.Producer;
 import com.drivers.suggestion.controller.exceptionHandler.exceptions.NoDataFoundException;
 import com.drivers.suggestion.model.Driver;
 import com.drivers.suggestion.model.NearestDrivers;
@@ -19,6 +20,13 @@ public class BackfeedController implements IBackfeedController {
     @Autowired
     IBaseService baseService;
 
+    private final Producer producer;
+
+    public BackfeedController(Producer producer) {
+        this.producer = producer;
+    }
+
+
     @Override
     public ResponseEntity<List<NearestDrivers>> getNearestDrivers(String storeId, int numOfDrivers) throws NoDataFoundException {
         return baseService.retrieveNearestDriversFrom(storeId, numOfDrivers);
@@ -31,6 +39,7 @@ public class BackfeedController implements IBackfeedController {
 
     @Override
     public ResponseEntity<String> postDriversData(List<Driver> driversData) {
+        this.producer.sendDriversData(driversData);
         return baseService.insertDriverDetails(driversData);
     }
 
