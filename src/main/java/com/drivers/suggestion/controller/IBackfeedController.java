@@ -1,5 +1,6 @@
 package com.drivers.suggestion.controller;
 
+import com.drivers.suggestion.controller.exceptionHandler.exceptions.NoDataFoundException;
 import com.drivers.suggestion.model.Driver;
 import com.drivers.suggestion.model.NearestDrivers;
 import com.drivers.suggestion.model.Store;
@@ -34,11 +35,12 @@ public interface IBackfeedController {
                     value = "Number drivers to be fetched",
                     type = "Integer",
                     example = "10",
-                    required = true) int numOfDrivers);
+                    required = true) int numOfDrivers) throws NoDataFoundException;
 
 
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Gives success message upon inserting the records in database")
+            @ApiResponse(code = 200, message = "Gives success message upon inserting the records in database"),
+            @ApiResponse(code = 400, message = "Bad JSON Request")
     })
     @ApiOperation(value = "Retrieves stores data", response = String.class)
     @PostMapping("/StoresData")
