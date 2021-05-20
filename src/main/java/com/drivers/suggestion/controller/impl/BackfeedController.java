@@ -39,9 +39,8 @@ public class BackfeedController implements IBackfeedController {
 
     @Override
     public ResponseEntity<String> postDriversData(List<Driver> driversData) {
-        return baseService.insertDriverDetails(driversData);
         this.producer.sendDriversData(driversData);
-        return null;
+        return baseService.insertDriverDetails(driversData);
     }
 
 }

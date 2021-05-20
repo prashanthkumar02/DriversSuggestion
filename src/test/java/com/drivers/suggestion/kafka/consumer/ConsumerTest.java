@@ -32,9 +32,9 @@ public class ConsumerTest {
         List<Driver> driverList = new ArrayList<>();
 
         Driver driver = new Driver();
-        driver.setDriverId("testing");
-        driver.setDriversLatitude(90);
-        driver.setDriversLongitude(180);
+        driver.setDriverID("testing");
+        driver.setLatitude(90);
+        driver.setLongitude(180);
         driverList.add(driver);
 
         producer.sendDriversData(driverList);
