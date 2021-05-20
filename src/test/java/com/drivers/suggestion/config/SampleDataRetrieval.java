@@ -1,5 +1,6 @@
 package com.drivers.suggestion.config;
 
+import com.drivers.suggestion.model.Driver;
 import com.drivers.suggestion.model.NearestDrivers;
 import com.drivers.suggestion.model.Store;
 
@@ -25,8 +26,8 @@ public class SampleDataRetrieval {
 
     public static  List<Store> getSampleStores() {
          List<Store> storeLists = new ArrayList<>();
-
          Store store = new Store();
+
          store.setStoreID("testing1");
          store.setLatitude(90);
          store.setLongitude(180);
@@ -42,5 +43,27 @@ public class SampleDataRetrieval {
          store.setLongitude(-180);
          storeLists.add(store);
          return storeLists;
+    }
+
+    public static List<Driver> getSampleDrivers() {
+        List<Driver> driverList = new ArrayList<>();
+        Driver driver = new Driver();
+
+        driver.setDriverID("testing1");
+        driver.setLatitude(90);
+        driver.setLongitude(180);
+        driverList.add(driver);
+
+        driver.setDriverID("testing2");
+        driver.setLatitude(0);
+        driver.setLongitude(0);
+        driverList.add(driver);
+
+        driver.setDriverID("testing3");
+        driver.setLatitude(-90);
+        driver.setLongitude(-180);
+        driverList.add(driver);
+
+        return driverList;
     }
 }

@@ -1,7 +1,7 @@
 package com.drivers.suggestion.kafka.consumer;
 
+import com.drivers.suggestion.config.SampleDataRetrieval;
 import com.drivers.suggestion.kafka.producer.Producer;
-import com.drivers.suggestion.model.Driver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @SpringBootTest
 @DirtiesContext
@@ -29,16 +26,8 @@ public class ConsumerTest {
 
     @Test
     public void testListenDriversDataWithProperData() {
-        List<Driver> driverList = new ArrayList<>();
+        producer.sendDriversData(SampleDataRetrieval.getSampleDrivers());
 
-        Driver driver = new Driver();
-        driver.setDriverID("testing");
-        driver.setLatitude(90);
-        driver.setLongitude(180);
-        driverList.add(driver);
-
-        producer.sendDriversData(driverList);
-        // Need to have assertions in future
     }
 
 }

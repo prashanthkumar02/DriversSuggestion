@@ -1,6 +1,7 @@
 package com.drivers.suggestion.service.impl;
 
-import com.drivers.suggestion.controller.exceptionHandler.exceptions.NoDataFoundException;
+import com.drivers.suggestion.controller.exceptionHandler.exceptions.GenericRestExpception;
+import com.drivers.suggestion.kafka.producer.Producer;
 import com.drivers.suggestion.model.Driver;
 import com.drivers.suggestion.model.NearestDrivers;
 import com.drivers.suggestion.model.Store;
@@ -23,17 +24,25 @@ public class BaseService implements IBaseService {
     @Autowired
     DriverRepository driverRepository;
 
-    @Override
-    public ResponseEntity<List<NearestDrivers>> retrieveNearestDriversFrom(String storeID, int numOfDrivers) throws NoDataFoundException {
-        ResponseEntity<List<NearestDrivers>> responseEntity;
-        List<NearestDrivers> closestDrivers = driverRepository.getNearestDrivers(storeID, numOfDrivers);
+    @Autowired
+    private Producer producer;
 
-        if(!closestDrivers.isEmpty()) {
-            responseEntity = new ResponseEntity<>(closestDrivers, HttpStatus.OK);
-            return responseEntity;
-        } else {
-            throw new NoDataFoundException("No data found for storeId - " + storeID);
+    @Override
+    public ResponseEntity<List<NearestDrivers>> retrieveNearestDriversFrom(String storeID, int numOfDrivers) throws GenericRestExpception {
+        if(storeID == null || storeID.isEmpty()) {
+            throw new GenericRestExpception("storeID cannot be null or empty", HttpStatus.BAD_REQUEST);
         }
+
+        if(numOfDrivers < 1) {
+            throw new GenericRestExpception("numOfDrivers cannot be less than 1", HttpStatus.BAD_REQUEST);
+        }
+
+        List<NearestDrivers> closestDrivers = driverRepository.getNearestDrivers(storeID, numOfDrivers);
+        if(closestDrivers == null || closestDrivers.isEmpty()) {
+            throw new GenericRestExpception("No data found for storeId - " + storeID, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(closestDrivers, HttpStatus.OK);
     }
 
     @Override
@@ -44,11 +53,15 @@ public class BaseService implements IBaseService {
     }
 
     @Override
-    public ResponseEntity<String> insertDriverDetails(List<Driver> driverDetails) {
-        for(Driver driver: driverDetails)
-            driverRepository.save(driver);
-        return new ResponseEntity<>("Inserted records successfully!", HttpStatus.OK);
+    public ResponseEntity<String> publishDriverDetails(List<Driver> driverDetails) {
+        this.producer.sendDriversData(driverDetails);
+        return new ResponseEntity<>("Published in Kafka topic driver_location", HttpStatus.OK);
     }
 
+    @Override
+    public void insertDriverDetails(List<Driver> driverList) {
+        for(Driver driver: driverList)
+            driverRepository.save(driver);
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.drivers.suggestion.controller.exceptionHandler;
 
-import com.drivers.suggestion.controller.exceptionHandler.exceptions.NoDataFoundException;
+import com.drivers.suggestion.controller.exceptionHandler.exceptions.GenericKafkaException;
+import com.drivers.suggestion.controller.exceptionHandler.exceptions.GenericRestExpception;
 import org.hibernate.id.IdentifierGenerationException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -30,10 +31,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
-    @ExceptionHandler(NoDataFoundException.class)
-    protected ResponseEntity<Object> handleNoDataFoundException(
-            NoDataFoundException ex) {
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getDetailedMessage());
+    @ExceptionHandler(GenericRestExpception.class)
+    protected ResponseEntity<Object> handleGenericRestException(
+            GenericRestExpception ex) {
+        ApiError apiError = new ApiError(ex.getStatus(), ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(GenericKafkaException.class)
+    protected ResponseEntity<Object> handleGenericKafkaException(
+            GenericKafkaException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return buildResponseEntity(apiError);
     }
 

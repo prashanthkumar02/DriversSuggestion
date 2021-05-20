@@ -1,6 +1,6 @@
 package com.drivers.suggestion.controller;
 
-import com.drivers.suggestion.controller.exceptionHandler.exceptions.NoDataFoundException;
+import com.drivers.suggestion.controller.exceptionHandler.exceptions.GenericRestExpception;
 import com.drivers.suggestion.model.Driver;
 import com.drivers.suggestion.model.NearestDrivers;
 import com.drivers.suggestion.model.Store;
@@ -35,7 +35,7 @@ public interface IBackfeedController {
                     value = "Number drivers to be fetched",
                     type = "Integer",
                     example = "10",
-                    required = true) int numOfDrivers) throws NoDataFoundException;
+                    required = true) int numOfDrivers) throws GenericRestExpception;
 
 
     @ApiResponses(value = {
