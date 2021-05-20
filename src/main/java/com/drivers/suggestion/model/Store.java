@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "store")
@@ -14,44 +15,46 @@ public class Store {
 
     @Id
     @Column(name = "store_id")
-    int storeId;
+    String storeID;
 
     @Column(name = "store_latitude")
-    double storeLatitude;
+    @NotNull
+    double latitude;
 
     @Column(name = "store_longitude")
-    double storeLongitude;
+    @NotNull
+    double longitude;
 
-    public int getStoreId() {
-        return storeId;
+    public String getStoreID() {
+        return storeID;
     }
 
-    public void setStoreId(int storeId) {
-        this.storeId = storeId;
+    public void setStoreID(String storeID) {
+        this.storeID = storeID;
     }
 
-    public double getStoreLatitude() {
-        return storeLatitude;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setStoreLatitude(double storeLatitude) {
-        this.storeLatitude = storeLatitude;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public double getStoreLongitude() {
-        return storeLongitude;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setStoreLongitude(double storeLongitude) {
-        this.storeLongitude = storeLongitude;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("{");
-        builder.append("\"storeId\":\"").append(getStoreId()).append("\"")
-                .append(",\"storeLatitude\":").append(getStoreLatitude())
-                .append(",\"storeLongitude\":").append(getStoreLongitude());
+        builder.append("\"storeID\":\"").append(getStoreID()).append("\"")
+                .append(",\"latitude\":").append(getLatitude())
+                .append(",\"longitude\":").append(getLongitude());
         return builder.append("}").toString();
     }
 }
