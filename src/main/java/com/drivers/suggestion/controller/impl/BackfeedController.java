@@ -1,6 +1,7 @@
 package com.drivers.suggestion.controller.impl;
 
 import com.drivers.suggestion.controller.IBackfeedController;
+import com.drivers.suggestion.kafka.producer.Producer;
 import com.drivers.suggestion.model.Driver;
 import com.drivers.suggestion.model.NearestDrivers;
 import com.drivers.suggestion.model.Store;
@@ -11,6 +12,13 @@ import java.util.List;
 
 @RestController
 public class BackfeedController implements IBackfeedController {
+
+    private final Producer producer;
+
+    public BackfeedController(Producer producer) {
+        this.producer = producer;
+    }
+
 
     @Override
     public ResponseEntity<List<NearestDrivers>> getNearestDrivers(String storeId, int numOfDrivers) {
@@ -25,6 +33,7 @@ public class BackfeedController implements IBackfeedController {
 
     @Override
     public ResponseEntity<String> postDriversData(List<Driver> driversData) {
+        this.producer.sendDriversData(driversData);
         return null;
     }
 
