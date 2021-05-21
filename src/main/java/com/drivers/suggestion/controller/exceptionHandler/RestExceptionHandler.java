@@ -20,8 +20,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        String error = "Bad JSON format, please verify before retry";
-        return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, error));
+        String error = "Bad JSON format, please verify before retry further information - ";
+        return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, error + ex.getMessage()));
     }
 
     @ExceptionHandler(IdentifierGenerationException.class)

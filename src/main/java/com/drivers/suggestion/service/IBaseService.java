@@ -11,6 +11,7 @@ import java.util.List;
 public interface IBaseService {
     ResponseEntity<List<NearestDrivers>> retrieveNearestDriversFrom(String storeID, int numOfDrivers) throws GenericRestExpception;
     ResponseEntity<String> insertStoreDetails(List<Store> storeDetails);
+    ResponseEntity<String> updateStoreDetails(List<Store> storeDetails);
     ResponseEntity<String> publishDriverDetails(List<Driver> driverDetails);
     void insertDriverDetails(List<Driver> driverList);
 }

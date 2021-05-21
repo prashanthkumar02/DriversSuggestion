@@ -53,6 +53,18 @@ public class BackfeedControllerTest {
     }
 
     @Test
+    public void testPutLoadOfStoreDetails() {
+        String body = "Updated records successfully!";
+        when(baseService.updateStoreDetails(anyList())).thenReturn(new ResponseEntity<>(body, HttpStatus.OK));
+        ResponseEntity<String> expectedResponse = backfeedController.putLoadOfStoreDetails(SampleDataRetrieval.getSampleStores());
+
+        verify(baseService, times(1)).updateStoreDetails(anyList());
+        Assertions.assertEquals(expectedResponse.getStatusCodeValue(), 200);
+        Assertions.assertNotNull(expectedResponse.getBody());
+        Assertions.assertEquals(expectedResponse.getBody(), body);
+    }
+
+    @Test
     public void testPublishDriverDetails() {
         String body = "Published records successfully!";
         when(baseService.publishDriverDetails(anyList())).thenReturn(new ResponseEntity<>(body, HttpStatus.OK));

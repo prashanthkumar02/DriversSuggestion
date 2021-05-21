@@ -67,20 +67,33 @@ services:
       - "kafka"
     links:
       - kafka
+    networks:
+      - app-tier
 
   springboot-docker-container:
     image: springboot-docker-container
     ports:
       - "9080:9080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/db
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/db?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: "root"
       SPRING_DATASOURCE_PASSWORD: "user123"
+      SPRING_KAFKA_BOOTSTRAPSERVERS: kafkaContainer:29092
+      KAFKA_BROKERCONNECT: kafkaContainer:29092
     build:
-      context: "./docker_files"
-      dockerfile: "Springboot_Docker_Startup"
+      context: "./"
+      dockerfile: "./docker_files/Springboot_Docker_Startup"
     depends_on:
       - db
+      - zookeeper
+      - kafka
+    links:
+      - db
+      - zookeeper
+      - kafka
+    networks:
+      - app-tier
+
 
 # Names our volume
 volumes:

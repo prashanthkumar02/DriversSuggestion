@@ -31,6 +31,11 @@ public class BackfeedController implements IBackfeedController {
     }
 
     @Override
+    public ResponseEntity<String> putLoadOfStoreDetails(List<Store> storesConfig) {
+        return baseService.updateStoreDetails(storesConfig);
+    }
+
+    @Override
     public ResponseEntity<String> postDriversData(List<Driver> driversData) {
         return baseService.publishDriverDetails(driversData);
     }

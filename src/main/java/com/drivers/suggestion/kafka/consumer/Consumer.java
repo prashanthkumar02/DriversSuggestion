@@ -19,7 +19,7 @@ public class Consumer {
     @Autowired
     IBaseService baseService;
 
-    @KafkaListener(topics = "${spring.kafka.common.topic}", groupId = "${spring.kafka.consumer.groupID}", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "${spring.kafka.common.topic}", groupId = "${spring.kafka.consumer.group-id}", containerFactory = "kafkaListenerContainerFactory")
     public void listenDriversData(@Payload String payload) {
         ObjectMapper mapper = new ObjectMapper();
         List<Driver> deserializedPayload;

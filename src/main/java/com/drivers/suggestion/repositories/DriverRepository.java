@@ -11,4 +11,8 @@ public interface DriverRepository extends CrudRepository<Driver, Integer> {
 
     @Query(name = "nearestDriversMapping", nativeQuery = true)
     List<NearestDrivers> getNearestDrivers(String storeID, int numOfDrivers);
+
+    boolean existsByDriverID(String driverID);
+
+    Driver findByDriverID(String driverID);
 }

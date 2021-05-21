@@ -1,29 +1,34 @@
 package com.drivers.suggestion.model;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.domain.Persistable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+import java.util.Objects;
 
 @Entity
+@DynamicUpdate
 @Table(name = "store")
 @ApiModel(description = "Store object sample")
-public class Store {
+public class Store implements Persistable<String> {
 
     @Id
     @Column(name = "store_id")
+    @Pattern(regexp = "^[a-zA-Z0-9@\\. _-]*$")
     String storeID;
 
+    @Transient
+    @ApiModelProperty(hidden = true)
+    private boolean oldEntry;
+
     @Column(name = "store_latitude")
-    @NotNull
-    double latitude;
+    double latitude = -999;
 
     @Column(name = "store_longitude")
-    @NotNull
-    double longitude;
+    double longitude = -999;
 
     public String getStoreID() {
         return storeID;
@@ -31,6 +36,14 @@ public class Store {
 
     public void setStoreID(String storeID) {
         this.storeID = storeID;
+    }
+
+    public boolean isOldEntry() {
+        return oldEntry;
+    }
+
+    public void setOldEntry(boolean oldEntry) {
+        this.oldEntry = oldEntry;
     }
 
     public double getLatitude() {
@@ -47,6 +60,35 @@ public class Store {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    @Override
+    public String getId() {
+        return storeID;
+    }
+
+    @Override
+    public boolean isNew() {
+        return !this.oldEntry;
+    }
+
+    @PrePersist
+    @PostLoad
+    void markUpdated() {
+        this.oldEntry = true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Store store = (Store) o;
+        return Double.compare(store.latitude, latitude) == 0 && Double.compare(store.longitude, longitude) == 0 && Objects.equals(storeID, store.storeID);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(storeID, latitude, longitude);
     }
 
     @Override

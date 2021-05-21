@@ -1,12 +1,14 @@
 package com.drivers.suggestion.model;
 
 import io.swagger.annotations.ApiModel;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "driver")
+@DynamicUpdate
 @SqlResultSetMapping(
     name = "nearestDriversMapping",
     classes = {
@@ -31,15 +33,14 @@ public class Driver {
 
     @Id
     @Column(name = "driver_id")
+    @Pattern(regexp = "^[a-zA-Z0-9@\\. _-]*$")
     String driverID;
 
     @Column(name = "driver_latitude")
-    @NotNull
-    double latitude;
+    double latitude = -999;
 
     @Column(name = "driver_longitude")
-    @NotNull
-    double longitude;
+    double longitude = -999;
 
     public String getDriverID() {
         return driverID;

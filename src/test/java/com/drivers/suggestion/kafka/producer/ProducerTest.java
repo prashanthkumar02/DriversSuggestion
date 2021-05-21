@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
@@ -17,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.kafka.test.rule.EmbeddedKafkaRule;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -29,15 +32,19 @@ import java.util.Map;
 @SpringBootTest
 @DirtiesContext
 @RunWith(SpringRunner.class)
-@EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" })
 public class ProducerTest {
     private static String RECEIVER_TOPIC = "driver_location";
 
     @Autowired
     private Producer producer;
 
-    @Autowired
-    EmbeddedKafkaBroker embeddedKafkaBroker;
+    @ClassRule
+    public static EmbeddedKafkaRule embeddedKafka = new EmbeddedKafkaRule(1, true, RECEIVER_TOPIC);
+
+    @BeforeClass
+    public static void setUpBeforeClass() {
+        System.setProperty("spring.kafka.bootstrap-servers", embeddedKafka.getEmbeddedKafka().getBrokersAsString());
+    }
 
     @Test
     public void testSendDriversDataWithProperData() throws JsonProcessingException {
@@ -66,7 +73,7 @@ public class ProducerTest {
     }
 
     private Consumer<Integer, String> configureConsumer() {
-        Map<String, Object> consumerProps = KafkaTestUtils.consumerProps(RECEIVER_TOPIC, "true", embeddedKafkaBroker);
+        Map<String, Object> consumerProps = KafkaTestUtils.consumerProps(RECEIVER_TOPIC, "true", embeddedKafka.getEmbeddedKafka());
         consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         Consumer<Integer, String> consumer = new DefaultKafkaConsumerFactory<Integer, String>(consumerProps)
                 .createConsumer();
