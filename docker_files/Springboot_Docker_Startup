@@ -1,0 +1,4 @@
+FROM openjdk:8
+ADD target/DriversSuggestion-1.0.0.jar DriversSuggestion-1.0.0.jar
+EXPOSE 9080
+ENTRYPOINT ["java", "-jar" , "DriversSuggestion-1.0.0.jar"]
