@@ -24,11 +24,22 @@ import javax.validation.ConstraintViolationException;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Intercepts the exceptions between the rest controller (Inside world) and rest service (Outside world)
+ */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 @RestController
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
+    /**
+     * Handles all the JSON error's.
+     * @param ex - exception
+     * @param headers - headers
+     * @param status - response status
+     * @param request - request
+     * @return - a response entity with detailed message
+     */
     @NotNull
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, @NotNull HttpHeaders headers, @NotNull HttpStatus status, @NotNull WebRequest request) {
@@ -36,6 +47,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, error + ex.getMessage()));
     }
 
+    /**
+     * Intercepts if a data model has validation issues - handles by inbuilt method in response entity exception handler
+     * @param ex - exception
+     * @param headers - headers
+     * @param status - status
+     * @param request - request
+     * @return - a response entity with detailed message
+     */
     @NotNull
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -53,6 +72,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
+    /**
+     * Intercepts if a data model has validation issues - manual handling
+     * @param ex - exception
+     * @return - a response entity with detailed message
+     */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
         Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
@@ -70,13 +94,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
-    @ExceptionHandler(IdentifierGenerationException.class)
-    protected ResponseEntity<Object> handleIdentityGenerationException(
-            IdentifierGenerationException ex) {
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
-        return buildResponseEntity(apiError);
-    }
-
+    /**
+     * Builds the response entity by using provided apiError object.
+     * @param apiError - error object
+     * @return - a response entity with detailed message
+     */
     private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }

@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Kafka producer
+ */
 @Service
 public class Producer {
 
@@ -19,6 +22,11 @@ public class Producer {
     @Autowired
     private KafkaTemplate<String, String> producer;
 
+    /**
+     * Takes a list of drivers data and published into the topic.
+     * @param driversData - list of drivers data
+     * @throws JsonProcessingException - throws when JSON has invalid format (Never occurs as the data model is validated at controller level).
+     */
     public void sendDriversData(List<Driver> driversData) throws JsonProcessingException {
         this.producer.send(topicName, new ObjectMapper().writeValueAsString(driversData));
     }

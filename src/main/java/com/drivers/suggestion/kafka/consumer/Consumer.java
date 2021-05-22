@@ -12,12 +12,19 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Kafka consumer
+ */
 @Component
 public class Consumer {
 
     @Autowired
     IDriverService baseService;
 
+    /**
+     * Triggers when a message is published in the topic by the producer. takes the list of data and inserts into database.
+     * @param payload - list of data
+     */
     @KafkaListener(topics = "${spring.kafka.common.topic}", groupId = "${spring.kafka.consumer.group-id}"/*, containerFactory = "kafkaListenerContainerFactory"*/)
     public void listenDriversData(@Payload String payload) {
         ObjectMapper mapper = new ObjectMapper();

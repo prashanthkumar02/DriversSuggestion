@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * Driver service
+ */
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class DriverServiceImpl implements IDriverService {
@@ -31,6 +34,12 @@ public class DriverServiceImpl implements IDriverService {
     private final static String DATA_WITH_MISSING_FIELDS = "%d record(s) has a missing fields (for new record)";
     private static final String UNHANDLED_EXCEPTION = "Unhandled JSON Exception! further message - %s";
 
+    /**
+     * Method takes two req params and return 'N' number of closest drivers for a given store id.
+     * @param storeID - Id to find the closest drivers
+     * @param numOfDrivers - number of drivers needed to fetch
+     * @return responseEntity with a detailed message
+     */
     @Override
     public ResponseEntity<ResponseBody> retrieveNearestDriversFrom(String storeID, int numOfDrivers) {
         ResponseBody responseBody = responseBodyBuild(HttpStatus.NOT_FOUND.name(), String.format(NO_DATA_FOUND, storeID));
@@ -46,6 +55,11 @@ public class DriverServiceImpl implements IDriverService {
     }
 
 
+    /**
+     * Takes a list of driver's data and post it into kafka topic
+     * @param driverDetails - list of driver's data
+     * @return responseEntity with a detailed message
+     */
     @Override
     public ResponseEntity<ResponseBody> publishDriverDetails(List<Driver> driverDetails) {
         ResponseBody responseBody = responseBodyBuild(HttpStatus.OK.name(),String.format(DATA_PUBLISHED_TO_TOPIC, driverDetails.size()));
@@ -77,6 +91,10 @@ public class DriverServiceImpl implements IDriverService {
         return new ResponseEntity<>(responseBody, HttpStatus.valueOf(responseBody.getStatus()));
     }
 
+    /**
+     * Takes a load of driver's data and insert if a new record is found, update if an existing record is found.
+     * @param driverList - list of driver's data
+     */
     @Override
     public void insertDriverDetails(List<Driver> driverList) {
         for(Driver driver: driverList) {

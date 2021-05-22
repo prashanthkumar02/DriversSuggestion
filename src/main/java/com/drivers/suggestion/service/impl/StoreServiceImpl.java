@@ -26,6 +26,12 @@ public class StoreServiceImpl implements IStoreService {
     private static final String MESSAGE_FOR_NEW_STORES_UPDATE = "%d record(s) has been found identical";
     private static final String MESSAGE_FOR_IDENTICAL_STORES_UPDATE = "%d new record(s) found, please use POST method";
 
+    /**
+     * Takes a list of store's data and inserts it into database
+     * @param storeDetails - list of stores data
+     * @param storesInBadFormat - number of stores in bad format (invalid)
+     * @return responseEntity with a detailed message
+     */
     @Override
     public ResponseEntity<ResponseBody> insertStoreDetails(List<Store> storeDetails, int storesInBadFormat) {
         ResponseBody responseBody = responseBodyBuild(HttpStatus.OK.name(), String.format(MESSAGE_INSERTED_RECORDS, storeDetails.size()));
@@ -55,6 +61,11 @@ public class StoreServiceImpl implements IStoreService {
         return new ResponseEntity<>(responseBody, HttpStatus.valueOf(responseBody.getStatus()));
     }
 
+    /**
+     * Takes a list of store's data and updates the data upon matching a criteria.
+     * @param storeDetails - list of store's data
+     * @return responseEntity with a detailed message
+     */
     @Override
     public ResponseEntity<ResponseBody> updateStoreDetails(List<Store> storeDetails) {
         int numSameStores = 0;
