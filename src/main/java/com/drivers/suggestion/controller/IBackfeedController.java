@@ -1,8 +1,8 @@
 package com.drivers.suggestion.controller;
 
-import com.drivers.suggestion.controller.exceptionHandler.exceptions.GenericRestExpception;
 import com.drivers.suggestion.model.Driver;
 import com.drivers.suggestion.model.NearestDrivers;
+import com.drivers.suggestion.model.requestAndResponse.ResponseBody;
 import com.drivers.suggestion.model.Store;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.List;
 
 public interface IBackfeedController {
@@ -28,17 +30,25 @@ public interface IBackfeedController {
             response = NearestDrivers.class,
             responseContainer = "List")
     @GetMapping("/fetchNearestDrivers")
-    ResponseEntity<List<NearestDrivers>> getNearestDrivers(
+    ResponseEntity<ResponseBody> getNearestDrivers(
             @ApiParam(
                     value = "Store number to fetch the nearest drivers",
                     type = "String",
                     example = "1234",
-                    required = true) String storeId,
+                    required = true)
+                @Valid
+                @Pattern(regexp = "^[a-zA-Z0-9@\\. _-]*$", message = "Pattern not matched, acceptable characters a-zA-Z0-9@._-")
+                @NotEmpty
+                @NotBlank
+                @NotNull String storeId,
             @ApiParam(
                     value = "Number drivers to be fetched",
                     type = "Integer",
                     example = "10",
-                    required = true) int numOfDrivers) throws GenericRestExpception;
+                    required = true)
+                @Valid
+                @Min(1)
+                @NotNull int numOfDrivers);
 
 
     @ApiResponses(value = {
@@ -55,11 +65,11 @@ public interface IBackfeedController {
     })
     @ApiOperation(value = "Insert any new store data", response = String.class)
     @PostMapping("/postStoresData")
-    ResponseEntity<String> postLoadOfStoreDetails(
+    ResponseEntity<ResponseBody> postLoadOfStoreDetails(
             @ApiParam(
                     value = "List of store details",
                     type = "List<Store>",
-                    required = true) @RequestBody List<Store> storesConfig);
+                    required = true) @RequestBody List<@Valid Store> storesConfig);
 
 
     @ApiResponses(value = {
@@ -72,7 +82,7 @@ public interface IBackfeedController {
     })
     @ApiOperation(value = "Update any existing store data", response = String.class)
     @PutMapping("/putStoresData")
-    ResponseEntity<String> putLoadOfStoreDetails(
+    ResponseEntity<ResponseBody> putLoadOfStoreDetails(
             @ApiParam(
                     value = "List of store details",
                     type = "List<Store>",
@@ -88,7 +98,7 @@ public interface IBackfeedController {
     })
     @ApiOperation(value = "Back feeding the drivers data into the database using Kafka, REST", response = String.class)
     @PostMapping("/postDriversData")
-    ResponseEntity<String> postDriversData(
+    ResponseEntity<ResponseBody> postDriversData(
             @ApiParam(
                     value = "List of drivers details",
                     type = "List<Driver>",

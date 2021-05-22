@@ -1,7 +1,6 @@
 package com.drivers.suggestion.kafka.producer;
 
 import com.drivers.suggestion.config.SampleDataRetrieval;
-import com.drivers.suggestion.controller.exceptionHandler.exceptions.GenericKafkaException;
 import com.drivers.suggestion.model.Driver;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -17,14 +16,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.test.EmbeddedKafkaBroker;
-import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.rule.EmbeddedKafkaRule;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -60,16 +56,6 @@ public class ProducerTest {
         Assertions.assertNotNull(receivedDriversList);
         Assertions.assertEquals(receivedDriversList.size(), 3);
         consumer.close();
-    }
-
-    @Test(expected = GenericKafkaException.class)
-    public void testSendDriversDataWithNoData() {
-        producer.sendDriversData(new ArrayList<>());
-    }
-
-    @Test(expected = GenericKafkaException.class)
-    public void testSendDriversDataWithNull() {
-        producer.sendDriversData(null);
     }
 
     private Consumer<Integer, String> configureConsumer() {

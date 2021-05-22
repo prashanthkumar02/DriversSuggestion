@@ -1,8 +1,12 @@
 package com.drivers.suggestion.model;
 
 import io.swagger.annotations.ApiModel;
+import lombok.Getter;
+import lombok.Setter;
 
 @ApiModel(description = "Return driver details example")
+@Getter
+@Setter
 public class NearestDrivers {
 
     String driverID;
@@ -14,38 +18,6 @@ public class NearestDrivers {
         this.driverID = driverID;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.distanceFromStore = distanceFromStore;
-    }
-
-    public String getDriverID() {
-        return driverID;
-    }
-
-    public void setDriverID(String driverID) {
-        this.driverID = driverID;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public double getDistanceFromStore() {
-        return distanceFromStore;
-    }
-
-    public void setDistanceFromStore(double distanceFromStore) {
         this.distanceFromStore = distanceFromStore;
     }
 

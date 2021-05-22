@@ -1,6 +1,5 @@
 package com.drivers.suggestion.kafka.producer;
 
-import com.drivers.suggestion.controller.exceptionHandler.exceptions.GenericKafkaException;
 import com.drivers.suggestion.model.Driver;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Kafka producer
+ */
 @Service
 public class Producer {
 
@@ -20,19 +22,13 @@ public class Producer {
     @Autowired
     private KafkaTemplate<String, String> producer;
 
-    public void sendDriversData(List<Driver> driversData) {
-        ObjectMapper mapper = new ObjectMapper();
-        String dataInString;
-        try {
-            if(driversData == null || driversData.isEmpty()) {
-                throw new GenericKafkaException("No data available to publish into Kafka");
-            }
-
-            dataInString = mapper.writeValueAsString(driversData);
-            this.producer.send(topicName, dataInString);
-        } catch (JsonProcessingException e) {
-            throw new GenericKafkaException("Unhandled JSON Exception! further message - " + e.getMessage() );
-        }
+    /**
+     * Takes a list of drivers data and published into the topic.
+     * @param driversData - list of drivers data
+     * @throws JsonProcessingException - throws when JSON has invalid format (Never occurs as the data model is validated at controller level).
+     */
+    public void sendDriversData(List<Driver> driversData) throws JsonProcessingException {
+        this.producer.send(topicName, new ObjectMapper().writeValueAsString(driversData));
     }
 
 }
