@@ -2,7 +2,8 @@ package com.drivers.suggestion.kafka.consumer;
 
 import com.drivers.suggestion.config.SampleDataRetrieval;
 import com.drivers.suggestion.kafka.producer.Producer;
-import com.drivers.suggestion.service.impl.BaseService;
+import com.drivers.suggestion.service.impl.DriverServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -31,7 +32,7 @@ public class ConsumerTest {
     private Producer producer;
 
     @Mock
-    BaseService baseService;
+    DriverServiceImpl driverServiceImpl;
 
     @ClassRule
     public static EmbeddedKafkaRule embeddedKafka = new EmbeddedKafkaRule(1, true, RECEIVER_TOPIC);
@@ -42,8 +43,8 @@ public class ConsumerTest {
     }
 
     @Test
-    public void testListenDriversDataWithProperData() {
-        doNothing().when(baseService).insertDriverDetails(anyList());
+    public void testListenDriversDataWithProperData() throws JsonProcessingException {
+        doNothing().when(driverServiceImpl).insertDriverDetails(anyList());
         producer.sendDriversData(SampleDataRetrieval.getSampleDrivers());
 
         //verify(baseService, atLeast(1)).insertDriverDetails(anyList());

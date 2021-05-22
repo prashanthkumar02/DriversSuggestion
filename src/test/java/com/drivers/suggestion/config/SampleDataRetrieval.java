@@ -29,20 +29,41 @@ public class SampleDataRetrieval {
          Store store = new Store();
 
          store.setStoreID("testing1");
-         store.setLatitude(90);
-         store.setLongitude(180);
+         store.setLatitude(90.00);
+         store.setLongitude(180.00);
          storeLists.add(store);
 
          store.setStoreID("testing2");
-         store.setLatitude(0);
-         store.setLongitude(0);
+         store.setLatitude(0.00);
+         store.setLongitude(0.00);
          storeLists.add(store);
 
          store.setStoreID("testing3");
-         store.setLatitude(-90);
-         store.setLongitude(-180);
+         store.setLatitude(-90.00);
+         store.setLongitude(-180.00);
          storeLists.add(store);
          return storeLists;
+    }
+
+    public static List<Store> getSampleDefaultStores() {
+        List<Store> storeLists = new ArrayList<>();
+        Store store = new Store();
+
+        store.setStoreID("testing1");
+        store.setLatitude(-999.00);
+        store.setLongitude(180.00);
+        storeLists.add(store);
+
+        store.setStoreID("testing2");
+        store.setLatitude(0.00);
+        store.setLongitude(-999.00);
+        storeLists.add(store);
+
+        store.setStoreID("testing3");
+        store.setLatitude(-999.00);
+        store.setLongitude(-999.00);
+        storeLists.add(store);
+        return storeLists;
     }
 
     public static List<Driver> getSampleDrivers() {
@@ -50,18 +71,18 @@ public class SampleDataRetrieval {
         Driver driver = new Driver();
 
         driver.setDriverID("testing1");
-        driver.setLatitude(90);
-        driver.setLongitude(180);
+        driver.setLatitude(90.00);
+        driver.setLongitude(180.00);
         driverList.add(driver);
 
         driver.setDriverID("testing2");
-        driver.setLatitude(0);
-        driver.setLongitude(0);
+        driver.setLatitude(0.00);
+        driver.setLongitude(0.00);
         driverList.add(driver);
 
         driver.setDriverID("testing3");
-        driver.setLatitude(-90);
-        driver.setLongitude(-180);
+        driver.setLatitude(-90.00);
+        driver.setLongitude(-180.00);
         driverList.add(driver);
 
         return driverList;
