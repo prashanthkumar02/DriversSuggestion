@@ -16,7 +16,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseBody {
 
-    private String message;
+    private Object message;
     private String status;
     private List<NearestDrivers> driversFetched;
 

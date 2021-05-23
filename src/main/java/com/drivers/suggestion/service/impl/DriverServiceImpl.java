@@ -29,8 +29,8 @@ public class DriverServiceImpl implements IDriverService {
     private final Producer producer;
 
     private final static String NO_DATA_FOUND = "No data found for storeId - %s";
-    private final static String DATA_FOUND = "%d record(s) have found, sorted upon the closet distance";
-    private final static String DATA_PUBLISHED_TO_TOPIC = "%d records are published to the topic driver_location";
+    private final static String DATA_FOUND = "%d record(s) have found, sorted upon the closest distance";
+    private final static String DATA_PUBLISHED_TO_TOPIC = "%d record(s) published to the topic driver_location";
     private final static String DATA_WITH_MISSING_FIELDS = "%d record(s) has a missing fields (for new record)";
     private static final String UNHANDLED_EXCEPTION = "Unhandled JSON Exception! further message - %s";
 

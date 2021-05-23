@@ -15,6 +15,6 @@ public class LatitudeValidator implements
     public boolean isValid(Double aDouble, ConstraintValidatorContext constraintValidatorContext) {
         if(aDouble == null)
             return false;
-        return aDouble < 90 && aDouble > -90 || aDouble == -999;
+        return aDouble <= 90 && aDouble >= -90 || aDouble == -999;
     }
 }

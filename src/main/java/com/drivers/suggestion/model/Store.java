@@ -20,7 +20,7 @@ import javax.validation.constraints.*;
 @Getter
 @Setter
 @Valid
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"oldEntry"})
 @ToString
 @Table(name = "store")
 @ApiModel(description = "Store object sample")

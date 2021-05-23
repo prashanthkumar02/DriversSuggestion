@@ -15,6 +15,6 @@ public class LongitudeValidator implements
     public boolean isValid(Double aDouble, ConstraintValidatorContext constraintValidatorContext) {
         if(aDouble == null)
             return false;
-        return aDouble < 180 && aDouble > -180 || aDouble == -999;
+        return aDouble <= 180 && aDouble >= -180 || aDouble == -999;
     }
 }

@@ -22,9 +22,9 @@ public class StoreServiceImpl implements IStoreService {
     private static final String MESSAGE_BAD_FORMAT_RECORDS = "%d has bad format, All fields are mandatory ";
     private static final String MESSAGE_EXISTING_RECORDS = "%d record(s) found in database, please use PUT endpoint to update (or) Enter new records to insert ";
 
-    private static final String MESSAGE_ON_SUCCESSFUL_UPDATE = "Updated %d record(s)!";
-    private static final String MESSAGE_FOR_NEW_STORES_UPDATE = "%d record(s) has been found identical";
-    private static final String MESSAGE_FOR_IDENTICAL_STORES_UPDATE = "%d new record(s) found, please use POST method";
+    private static final String MESSAGE_ON_SUCCESSFUL_UPDATE = "Updated %d record(s)! ";
+    private static final String MESSAGE_FOR_IDENTICAL_STORES_UPDATE = "%d record(s) has been found identical ";
+    private static final String MESSAGE_FOR_NEW_STORES_UPDATE = "%d new record(s) found, please use POST method ";
 
     /**
      * Takes a list of store's data and inserts it into database
@@ -52,9 +52,9 @@ public class StoreServiceImpl implements IStoreService {
                 responseBody = responseBodyBuild(HttpStatus.NOT_ACCEPTABLE.name(), String.format(MESSAGE_EXISTING_RECORDS, storesAlreadyExist));
             } else {
                 responseBody = responseBodyBuild(HttpStatus.ACCEPTED.name(),
-                        String.format(MESSAGE_INSERTED_RECORDS, (storeDetails.size() - storesAlreadyExist))
-                        + String.format(MESSAGE_BAD_FORMAT_RECORDS, storesInBadFormat)
-                        + String.format(MESSAGE_EXISTING_RECORDS, storesAlreadyExist));
+                        new Object[] {String.format(MESSAGE_INSERTED_RECORDS, (storeDetails.size() - storesAlreadyExist)),
+                        String.format(MESSAGE_BAD_FORMAT_RECORDS, storesInBadFormat),
+                        String.format(MESSAGE_EXISTING_RECORDS, storesAlreadyExist)});
             }
         }
 
@@ -73,23 +73,23 @@ public class StoreServiceImpl implements IStoreService {
         ResponseBody responseBody = responseBodyBuild(HttpStatus.OK.name(), String.format(MESSAGE_ON_SUCCESSFUL_UPDATE, storeDetails.size()));
         for(Store store : storeDetails) {
             Store updatedStore = storeRepository.findByStoreID(store.getStoreID());
-            if(updatedStore != null) {
+            if(updatedStore == null)
+                numNewStores++;
+            else {
+
                 if(store.getLatitude() == Constants.DEFAULT_VALUE)
                     store.setLatitude(updatedStore.getLatitude());
                 if(store.getLongitude() == Constants.DEFAULT_VALUE)
                     store.setLongitude(updatedStore.getLongitude());
-            }
 
-            if(updatedStore == null)
-                numNewStores++;
-            else if(updatedStore.equals(store))
-                numSameStores++;
-            else {
-                updatedStore.setLatitude(store.getLatitude());
-                updatedStore.setLongitude(store.getLongitude());
-                storeRepository.save(updatedStore);
+                if(updatedStore.equals(store))
+                    numSameStores++;
+                else {
+                    updatedStore.setLatitude(store.getLatitude());
+                    updatedStore.setLongitude(store.getLongitude());
+                    storeRepository.save(updatedStore);
+                }
             }
-
         }
 
 
@@ -97,19 +97,19 @@ public class StoreServiceImpl implements IStoreService {
             if (numSameStores == storeDetails.size()) {
                 responseBody = responseBodyBuild(HttpStatus.NOT_ACCEPTABLE.name(), String.format(MESSAGE_FOR_IDENTICAL_STORES_UPDATE, numSameStores));
             } else if (numNewStores == storeDetails.size()) {
-                responseBody = responseBodyBuild(HttpStatus.NOT_ACCEPTABLE.name(), String.format(MESSAGE_FOR_NEW_STORES_UPDATE, numSameStores));
+                responseBody = responseBodyBuild(HttpStatus.NOT_ACCEPTABLE.name(), String.format(MESSAGE_FOR_NEW_STORES_UPDATE, numNewStores));
             } else {
                 responseBody = responseBodyBuild(HttpStatus.ACCEPTED.name(),
-                        String.format(MESSAGE_ON_SUCCESSFUL_UPDATE, (storeDetails.size() - numSameStores - numNewStores))
-                        + String.format(MESSAGE_FOR_IDENTICAL_STORES_UPDATE, numSameStores)
-                        + String.format(MESSAGE_FOR_NEW_STORES_UPDATE, numNewStores));
+                        new Object[] {String.format(MESSAGE_ON_SUCCESSFUL_UPDATE, (storeDetails.size() - numSameStores - numNewStores)),
+                        String.format(MESSAGE_FOR_IDENTICAL_STORES_UPDATE, numSameStores),
+                        String.format(MESSAGE_FOR_NEW_STORES_UPDATE, numNewStores)});
             }
         }
 
         return new ResponseEntity<>(responseBody, HttpStatus.valueOf(responseBody.getStatus()));
     }
 
-    private ResponseBody responseBodyBuild(String status, String message) {
+    private ResponseBody responseBodyBuild(String status, Object message) {
         return ResponseBody.builder()
                 .status(status)
                 .message(message).build();

@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 @RunWith(SpringRunner.class)
 public class DriverServiceImplTest {
 
-    private final static String DATA_PUBLISHED_TO_TOPIC = "%d records are published to the topic driver_location";
+    private final static String DATA_PUBLISHED_TO_TOPIC = "%d record(s) published to the topic driver_location";
 
     @InjectMocks
     DriverServiceImpl driverServiceImpl;
